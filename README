@@ -4,5 +4,10 @@ EE 464D, Fall 2012/Spring 2013, 3D Modeler
 
 Right now, this is just to hold apks I've compiled of other projects.
 
-KiwiViewer build instructions here: http://vtk.org/Wiki/VES/Download_And_Build_Instructions
+KiwiViewer build instructions here: http://vtk.org/Wiki/VES/Download_And_Build_Instructions.
+NOTES:
+- Need latest version of CMake. For me, I had to manually download it.
+- To compile if you're using the latest APK, need to change configure_ant.sh and instead run:
+android update project --name KiwiViewer --path $app_dir --target android-17
+
 

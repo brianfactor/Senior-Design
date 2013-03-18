@@ -2,12 +2,22 @@ Senior Design Repository
 
 EE 464D, Fall 2012/Spring 2013, 3D Modeler
 
-Right now, this is just to hold apks I've compiled of other projects.
-
+Holds a build of KiwiViewer (used to view completed meshes on the phone)
 KiwiViewer build instructions here: http://vtk.org/Wiki/VES/Download_And_Build_Instructions.
 NOTES:
 - Need latest version of CMake. For me, I had to manually download it.
 - To compile if you're using the latest APK, need to change configure_ant.sh and instead run:
 android update project --name KiwiViewer --path $app_dir --target android-17
 
+Also now holds scripts to manage tasking on the linux server:
+Taylor wrote up the framework for this, and a lot of the code was contributed from him.
+
+Server Script usage:
+# call this 12 times, after capturing left and right for each 30 deg angle
+./s1_correlateImg left00.jpg right00.jpg pcout00.ply
+# call this 11 times, for each pair of pointclouds
+./s3_stichPCpair.sh pcout00.ply pcout01.ply pcstitch.ply
+./s3_stichPCpair.sh pcout00.ply pcstitch.ply pcstitch.ply
+# call this once, after stiching all perspectives
+./s3_generateMesh.sh pcstitch.ply outputMesh.ply
 

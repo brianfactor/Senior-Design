@@ -13,6 +13,7 @@ function testResult {
 }
 
 echo "--Log record `date`--" >> log.txt
+echo "--s3_generateMesh.sh--" >> log.txt
 
 #check for empty arguments
 if [ -z $1 ] || [ -z $2 ]
@@ -23,11 +24,12 @@ if [ -z $1 ] || [ -z $2 ]
 	exit 1
 fi
 #check that file exists
-if [ ! -e $1 ]
-  then
-	echo "Error: File doesn't exist." >> log.txt
-	exit 1
-fi
+while [ ! -e $1 ]
+  do
+	echo "Error: File $1 doesn't exist." >> log.txt
+	sleep 5
+	#exit 1
+done
 
 echo "Applying mesh to $1. output to $2" >> log.txt
 meshlabserver -i $1 -o $2 -s DelaunayTriangulation.mlx

@@ -14,6 +14,7 @@ function testResult {
 }
 
 echo "--Log record `date`--" >> log.txt
+echo "--s2_stitchPCpai.sh--" >> log.txt
 
 #check for empty arguments
 if [ -z $1 ] || [ -z $2 ] || [ -z $3 ]
@@ -24,15 +25,16 @@ if [ -z $1 ] || [ -z $2 ] || [ -z $3 ]
 	exit 1
 fi
 #check that files exist
-if [ ! -e $1 ] || [ ! -e $2 ]
-  then
-	echo "Error: File doesn't exist." >> log.txt
-	exit 1
-fi
+while [ ! -e $1 ] || [ ! -e $2 ]
+  do
+	echo "File $1 or $2 doesn't exist." >> log.txt
+	sleep 5
+	#exit 1
+done
 
 echo "Stitching clouds $1 and $2 together, storing output in $3" >> log.txt
-./pairwise_incremental_registration $1 $2 30 $3
+./pairwise_incremental_registration $1 $2 -30 $3
 #mv 1.ply $3
 
-testResult $1 $2 # check if it returned errors
-exit 0 # else success
+testResult $1 $2 	# check if it returned errors
+exit 0				# else success

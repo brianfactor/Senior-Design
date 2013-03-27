@@ -14,6 +14,7 @@ function testResult {
 }
 
 echo "--Log record `date`--" >> log.txt
+echo "--s1_correlateImg.sh--" >> log.txt
 
 #check for empty arguments
 if [ -z $1 ] || [ -z $2 ] || [ -z $3 ]
@@ -26,7 +27,7 @@ fi
 #check that files exist
 if [ ! -e $1 ] || [ ! -e $2 ]
   then
-	echo "Error: File doesn't exist." >> log.txt
+	echo "Error: File $1 or $2 doesn't exist." >> log.txt
 	exit 1
 fi
 
@@ -35,11 +36,13 @@ echo "Rectifying images $1 and $2" >> log.txt
 ./rectify $1 $2 leftrectified.jpg rightrectified.jpg
 testResult $1 $2
 
-if [ ! -e leftrectified.jpg ] || [ ! -e rightrectified.jpg ]
-  then
-	echo "Error: File doesn't exist."
-	exit 1
-fi
+while [ ! -e leftrectified.jpg ] || [ ! -e rightrectified.jpg ]
+  do
+	echo "File leftrectified.jpg or rightrectified.jpg doesn't exist." >> log.txt
+	sleep 5
+	#exit 1
+done
+
 echo "Correlating $1 and $2 and filtering filtering point cloud $3" >> log.txt
 #echo "python stereo_match.py leftrectified.jpg rightrectified.jpg $3"
 python ./stereo_match.py leftrectified.jpg rightrectified.jpg $3

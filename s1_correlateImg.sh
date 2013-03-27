@@ -33,7 +33,7 @@ fi
 
 echo "Rectifying images $1 and $2" >> log.txt
 #echo "rectify $1 $2 leftrectified.jpg rightrectified.jpg"
-./rectify $1 $2 leftrectified.jpg rightrectified.jpg
+eval "./rectify $1 $2 leftrectified.jpg rightrectified.jpg"
 testResult $1 $2
 
 while [ ! -e leftrectified.jpg ] || [ ! -e rightrectified.jpg ]

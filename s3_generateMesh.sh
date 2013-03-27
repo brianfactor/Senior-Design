@@ -32,7 +32,8 @@ while [ ! -e $1 ]
 done
 
 echo "Applying mesh to $1. output to $2" >> log.txt
-meshlabserver -i $1 -o $2 -s DelaunayTriangulation.mlx
+# xvfb-run added to we can call it thru ssh (without x)
+xvfb-run --server-args="-screen 0, 1024x768x24" meshlabserver -i $1 -o $2 -s DelaunayTriangulation.mlx
 
 testResult $1 # check if it returned errors
 exit 0 # else return with no errors

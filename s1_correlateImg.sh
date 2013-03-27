@@ -8,29 +8,45 @@ function testResult {
 	result=$?
 	if [ $result != 0 ] 
 	  then
-		echo "Error $result during correlation of $1 and $2"
+		echo "Error $result during correlation of $1 and $2" >> log.txt
 		exit $result
 	fi
 }
 
+echo "--Log record `date`--" >> log.txt
+
 #check for empty arguments
 if [ -z $1 ] || [ -z $2 ] || [ -z $3 ]
   then
+	echo "Invalid arguments." >> log.txt
+	echo "USAGE: ./s1_correlateImg left00.jpg right00.jpg out00.ply" >> log.txt
 	echo "USAGE: ./s1_correlateImg left00.jpg right00.jpg out00.ply"
 	exit 1
 fi
+#check that files exist
+if [ ! -e $1 ] || [ ! -e $2 ]
+  then
+	echo "Error: File doesn't exist." >> log.txt
+	exit 1
+fi
 
-echo "Correlating $1 and $2"
-# python ./stereo_match $1 $2
-# ./OpenCVReprojectImageToPointCloud $1 disp.ppm Q.xml
-# need to control output to $3 somehow...
+echo "Rectifying images $1 and $2" >> log.txt
+#echo "rectify $1 $2 leftrectified.jpg rightrectified.jpg"
+./rectify $1 $2 leftrectified.jpg rightrectified.jpg
+testResult $1 $2
+
+if [ ! -e leftrectified.jpg ] || [ ! -e rightrectified.jpg ]
+  then
+	echo "Error: File doesn't exist."
+	exit 1
+fi
+echo "Correlating $1 and $2 and filtering filtering point cloud $3" >> log.txt
+#echo "python stereo_match.py leftrectified.jpg rightrectified.jpg $3"
+python ./stereo_match.py leftrectified.jpg rightrectified.jpg $3
+testResult $1 $2
+
+#./statistical_removal $3 500 .5 # don't use - Drew's is better
+
 testResult
-
-echo "Filtering point cloud $3"
-#./statistical_removal $3 500 .5
-# mv 1.x 2.x # intentionally fail
-testResult
-
-# successful exit - need to modify scripts so we can check their exit status
+# successful exit
 exit 0
-

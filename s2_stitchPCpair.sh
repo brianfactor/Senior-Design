@@ -8,21 +8,31 @@ function testResult {
 	result=$?
 	if [ $result != 0 ] 
 	  then
-		echo "Error $result during meshing of $1"
+		echo "Error $result during stitching of $1 and $2" >> log.txt
 		exit $result
 	fi
 }
 
+echo "--Log record `date`--" >> log.txt
+
 #check for empty arguments
 if [ -z $1 ] || [ -z $2 ] || [ -z $3 ]
   then
+	echo "Invalid arguments." >> log.txt
+	echo "USAGE: ./s3_stichPCpair.sh pcout00.ply pcstitch.ply pcstitch.ply" >> log.txt
 	echo "USAGE: ./s3_stichPCpair.sh pcout00.ply pcstitch.ply pcstitch.ply"
 	exit 1
 fi
+#check that files exist
+if [ ! -e $1 ] || [ ! -e $2 ]
+  then
+	echo "Error: File doesn't exist." >> log.txt
+	exit 1
+fi
 
-echo "Stitching clouds $1 and $2 together, storing output in $3"
-#./pairwise_incremental_registration $1 $2
-mv 1.ply $3
-testResult # check if it returned errors
+echo "Stitching clouds $1 and $2 together, storing output in $3" >> log.txt
+./pairwise_incremental_registration $1 $2 30 $3
+#mv 1.ply $3
+
+testResult $1 $2 # check if it returned errors
 exit 0 # else success
-

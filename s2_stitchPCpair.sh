@@ -33,7 +33,7 @@ while [ ! -e $1 ] || [ ! -e $2 ]
 done
 
 echo "Stitching clouds $1 and $2 together, storing output in $3" >> log.txt
-eval `./pairwise_incremental_registration $1 $2 -30 $3`
+eval "./pairwise_incremental_registration $1 $2 -30 $3"
 
 testResult $1 $2 	# check if it returned errors
 exit 0				# else success

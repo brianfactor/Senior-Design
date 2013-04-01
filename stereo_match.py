@@ -54,8 +54,8 @@ if __name__ == '__main__':
 
 
 
-    bgL = cv2.pyrDown( cv2.imread("1.jpg", cv2.CV_LOAD_IMAGE_GRAYSCALE))
-    bgR = cv2.pyrDown( cv2.imread("2.jpg", cv2.CV_LOAD_IMAGE_GRAYSCALE))
+    bgL = cv2.pyrDown( cv2.imread("bgl.jpg", cv2.CV_LOAD_IMAGE_GRAYSCALE))
+    bgR = cv2.pyrDown( cv2.imread("bgr.jpg", cv2.CV_LOAD_IMAGE_GRAYSCALE))
 
     print "Loaded BGs"
 

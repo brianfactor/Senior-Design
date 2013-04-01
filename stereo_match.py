@@ -54,8 +54,8 @@ if __name__ == '__main__':
 
 
 
-    bgL = cv2.pyrDown( cv2.imread(sys.argv[1], cv2.CV_LOAD_IMAGE_GRAYSCALE))
-    bgR = cv2.pyrDown( cv2.imread(sys.argv[2], cv2.CV_LOAD_IMAGE_GRAYSCALE))
+    bgL = cv2.pyrDown( cv2.imread("1.jpg", cv2.CV_LOAD_IMAGE_GRAYSCALE))
+    bgR = cv2.pyrDown( cv2.imread("2.jpg", cv2.CV_LOAD_IMAGE_GRAYSCALE))
 
     print "Loaded BGs"
 
@@ -133,7 +133,7 @@ if __name__ == '__main__':
     points = cv2.reprojectImageTo3D(disp, Q)
     imgL = cv2.pyrDown( cv2.imread(sys.argv[1]))
     colors = cv2.cvtColor(imgL, cv2.COLOR_BGR2RGB)
-    mask = (disp > disp.min()) #& (bgfiltL > 0) 
+    mask = (disp > disp.min()) & (bgfiltL > 0) 
     print disp
     print points
 

@@ -25,11 +25,12 @@ if [ -z $1 ] || [ -z $2 ] || [ -z $3 ]
 	exit 1
 fi
 #check that files exist
-if [ ! -e $1 ] || [ ! -e $2 ]
-  then
-	echo "Error: File $1 or $2 doesn't exist." >> log.txt
-	exit 1
-fi
+while [ ! -e $1 ] || [ ! -e $2 ]
+  do
+	echo "File $1 or $2 doesn't exist." >> log.txt
+	#exit 1
+	sleep 5
+done
 
 echo "Rectifying images $1 and $2" >> log.txt
 #echo "rectify $1 $2 leftrectified.jpg rightrectified.jpg"

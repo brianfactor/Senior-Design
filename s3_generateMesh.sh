@@ -33,7 +33,7 @@ done
 
 echo "Applying mesh to $1. output to $2" >> log.txt
 echo "$1 $2 $3 $4 $5 $6 $7 $8 $9 ${10} ${11} ${12} ${13}" >> processLog.txt
-eval "./pairwise_incremental_registration $1 $2 $3 $4 $5 $6 $7 $8 $9 ${10} ${11} ${12} 1000 0 ${13} stitchTemp.ply"
+eval "./pairwise_incremental_registration $1 $2 $3 $4 $5 $6 $7 $8 $9 ${10} ${11} ${12} 22 10.5 1000 0 ${13} stitchTemp.ply"
 
 #xvfb-run --server-args="-screen 0, 1024x768x24" 
 meshlabserver -i stitchTemp.ply -o ${14} -s DelaunayTriangulation.mlx

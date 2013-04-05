@@ -127,7 +127,7 @@ void loadData (int argc, char **argv, std::vector<PCD, Eigen::aligned_allocator<
 {
   std::string extension (".ply");
   // Suppose the first argument is the actual test model
-  for (int i = 1; i < argc-4; i++)
+  for (int i = 1; i < argc-6; i++)
   {
     std::string fname = std::string (argv[i]);
     // Needs to be at least 5: .plot
@@ -176,7 +176,7 @@ int main (int argc, char** argv)
     //argc-2 =angle
     //double ang=atof(argv[argc-2])
     double ang=-30*3.14159/180;
-    Eigen::Affine3f transform=pcl::getTransformation(27,0,14,0,ang,0);
+    Eigen::Affine3f transform=pcl::getTransformation(atof(argv[argc-6]),0,atof(argv[argc-5]),0,ang,0);
     Eigen::Matrix4f rotate30 = transform.matrix();
     //Begin temp
     std::cout<<"Transform"<<endl;

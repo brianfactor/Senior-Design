@@ -40,5 +40,6 @@ time ./s3_generateMesh.sh 3.ply 5.ply 7.ply 9.ply 11.ply 13.ply 15.ply 17.ply 19
 DIR=`date +%H%M%D | sed 's/\///g'`
 mkdir $DIR
 mv *.jpg *.txt *.ply *.png $DIR
+cp $DIR/stitchTemp.ply .
 cp $DIR/output.ply .
 touch processLog.txt

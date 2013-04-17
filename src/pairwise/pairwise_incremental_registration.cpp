@@ -35,8 +35,10 @@
  *
  */
 
-/* \author Radu Bogdan Rusu
- * adaptation Raphael Favier*/
+/* Adapted from a variety of PCL tutorials http://pointclouds.org/documentation/tutorials/
+ * adaptation Taylor Phebus*/
+//This works well:
+//time ./pairwise_incremental_registration 3.ply 5.ply 7.ply 9.ply 11.ply 13.ply 15.ply 17.ply 19.ply 21.ply 23.ply 25.ply .7 22 10.5 200 1 .3 outTestRadius.ply
 #include <cmath>
 #include <boost/make_shared.hpp>
 #include <pcl/point_types.h>
@@ -53,15 +55,12 @@
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/filters/filter.h>
-
+#include <pcl/filters/passthrough.h>
 #include <pcl/features/normal_3d.h>
-
 #include <pcl/registration/icp.h>
 #include <pcl/registration/icp_nl.h>
 #include <pcl/registration/transforms.h>
-
 #include <pcl/visualization/pcl_visualizer.h>
-
 #include <pcl/point_types.h>
 #include <pcl/io/pcd_io.h>
 #include <pcl/kdtree/kdtree_flann.h>
@@ -215,19 +214,6 @@ int main (int argc, char** argv)
 	}
     	(*(dest))+=(*target);
     }
-	//Statistical filter
-  std::cerr << "PointCloud before filtering: " << dest->width * dest->height 
-       << " data points (" << pcl::getFieldsList (*dest) << ").";	
-  pcl::StatisticalOutlierRemoval<pcl::PointXYZ> st;
-  st.setInputCloud (dest);
-  st.setMeanK (atoi(argv[argc-4]));
-  st.setStddevMulThresh (atof(argv[argc-3]));
-  st.filter (*dest);
-  std::cerr << "PointCloud after filtering: " << dest->width * dest->height 
-       << " data points (" << pcl::getFieldsList (*dest) << ").";	
-
-
-  //writer.write<pcl::PointXYZ> ("inliers_"+s, *cloud_filtered, false);
 
 
     //Stitching complete, now downsampling
@@ -245,6 +231,42 @@ atof(argv[argc-2]));
 
   std::cerr << "PointCloud after downsampling: " << dest->width * dest->height 
        << " data points (" << pcl::getFieldsList (*dest) << ").";	
+
+  std::cerr << "PointCloud before filtering: " << dest->width * dest->height 
+       << " data points (" << pcl::getFieldsList (*dest) << ").";	
+	//Limit filter.
+  pcl::PassThrough<pcl::PointXYZ> ptfilter (true); // Initializing with true will allow us to extract the removed indices
+      ptfilter.setInputCloud (dest);
+      ptfilter.setFilterFieldName ("y");
+      ptfilter.setFilterLimits (-20.0, 0.0);
+  	pcl::PointCloud<pcl::PointXYZ>::Ptr FiltTemp (new pcl::PointCloud<pcl::PointXYZ>);
+      ptfilter.filter (*dest);
+      // The indices_x array indexes all points of cloud_in that have x between 0.0 and 1000.0
+      // The indices_rem array indexes all points of cloud_in that have x smaller than 0.0 or larger than 1000.0
+      // and also indexes all non-finite points of cloud_in
+      ptfilter.setInputCloud (dest);
+      ptfilter.setFilterFieldName ("x");
+      ptfilter.setFilterLimits (-20.0, 0.0);
+      ptfilter.setNegative (false);
+      ptfilter.filter (*dest);
+      // The resulting cloud_out contains all points of cloud_in that are finite and have:
+      // x between 0.0 and 1000.0, z larger than 10.0 or smaller than -10.0 and intensity smaller than 0.5.
+	
+
+	//Statistical filter
+  pcl::StatisticalOutlierRemoval<pcl::PointXYZ> st;
+  st.setInputCloud (dest);
+  st.setMeanK (atoi(argv[argc-4]));
+  st.setStddevMulThresh (atof(argv[argc-3]));
+  st.filter (*dest);
+  std::cerr << "PointCloud after filtering: " << dest->width * dest->height 
+       << " data points (" << pcl::getFieldsList (*dest) << ").";	
+
+
+  //writer.write<pcl::PointXYZ> ("inliers_"+s, *cloud_filtered, false);
+
+
+
        
     
 	  // Load input file into a PointCloud<T> with an appropriate type
